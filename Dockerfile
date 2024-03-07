@@ -5,6 +5,9 @@ FROM dustynv/ros:humble-desktop-l4t-r34.1.1 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Add the GPG key for the repository
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1A127079A92F09ED
+
 # Install language
 RUN apt-get update && apt-get install -y locales \
     && locale-gen en_US en_US.UTF-8 \
@@ -59,7 +62,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN rosdep init || echo "rosdep already initialized"
 
-ENV USERNAME=xplore
+ENV USERNAME=blockbuster
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -84,7 +87,7 @@ RUN rm -rf /var/lib/apt/lists/*
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 ###########################################
-#  Xplore Common image
+#  Blockbuster Common image
 ###########################################
 FROM dev AS blockbuster_common
 
@@ -93,9 +96,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install common ROS 2 packages
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get purge -y '*opencv*'
-RUN apt-get install -y --no-install-recommends \
-    ros-${ROS_DISTRO}-behaviortree-cpp-v3 \
-    ros-${ROS_DISTRO}-xacro
+# RUN apt-get install -y --no-install-recommends \
+#     ros-${ROS_DISTRO}-behaviortree-cpp-v3 \
+#     ros-${ROS_DISTRO}-xacro
 
 WORKDIR /home/$USERNAME
 
@@ -128,10 +131,10 @@ RUN apt-get update \
     libx11-6
 
 # Install Gazebo
-RUN add-apt-repository ppa:openrobotics/gazebo11-non-amd64
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gazebo \
-    libgazebo-dev
+# RUN add-apt-repository ppa:openrobotics/gazebo11-non-amd64
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     gazebo \
+#     libgazebo-dev
 
 # Install Gazebo ROS packages
 RUN apt-get update && apt-get upgrade -y
