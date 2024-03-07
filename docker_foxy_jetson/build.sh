@@ -1,1 +1,0 @@
-docker build --progress=plain -t ghcr.io/epflxplore/docker_commons:foxy-jetson --target gazebo_nvidia .
